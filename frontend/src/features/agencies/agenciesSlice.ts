@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import AgenciesService from "./agenciesServices";
+import { IProperty } from "types/properties";
 
 
 
@@ -20,14 +21,23 @@ export const updateAgencyInfo = createAsyncThunk(
         return res.data;
     })
 
+interface PropertyState{
+    properties:IProperty[],
+    loading: 'idle' | 'pending' | 'succeeded' | 'failed',
+    isLoading: boolean,
+    isSuccess: boolean,
+    isError: boolean,
+}
 
 const initialState = {
+    loading:"idle",
     agency: null,
     error: null,   
     isLoading: false,
     isSuccess: false,
     isError: false,
-}
+    properties:[]
+} as PropertyState
 
 export const agenciesSlice = createSlice({
     name: 'agencies',
@@ -37,42 +47,52 @@ export const agenciesSlice = createSlice({
             state.properties = []
         },       
     },
-    extraReducers: {
-         
+    extraReducers: (builder)=>{
+        builder.addCase(getAgencyInfo.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true
+            // state.agency = action.payload            
+        })
+
+        builder.addCase(updateAgencyInfo.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true
+            // state.agency = action.payload           
+        })
 
         /****** Get Agency Info ******/
-        [getAgencyInfo.pending]: (state, action) => {
-            state.isLoading = true;
-            state.isSuccess = false
-        },
-        [getAgencyInfo.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.isSuccess = true
-            state.agency = action.payload            
-        },
-        [getAgencyInfo.rejected]: (state, action) => {
-            state.isLoading = false;
-            state.isSuccess = false
-            state.isError = true
-            state.error = action.payload;
-        },
+        // [getAgencyInfo.pending]: (state, action) => {
+        //     state.isLoading = true;
+        //     state.isSuccess = false
+        // },
+        // [getAgencyInfo.fulfilled]: (state, action) => {
+        //     state.isLoading = false;
+        //     state.isSuccess = true
+        //     state.agency = action.payload            
+        // },
+        // [getAgencyInfo.rejected]: (state, action) => {
+        //     state.isLoading = false;
+        //     state.isSuccess = false
+        //     state.isError = true
+        //     state.error = action.payload;
+        // },
 
          /****** Update  Agency Info ******/
-         [updateAgencyInfo.pending]: (state, action) => {
-            state.isLoading = true;
-            state.isSuccess = false
-        },
-        [updateAgencyInfo.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            state.isSuccess = true
-            state.agency = action.payload 
-        },
-        [updateAgencyInfo.rejected]: (state, action) => {
-            state.isLoading = false;
-            state.isSuccess = false
-            state.isError = true
-            state.error = action.payload;
-        },
+        //  [updateAgencyInfo.pending]: (state, action) => {
+        //     state.isLoading = true;
+        //     state.isSuccess = false
+        // },
+        // [updateAgencyInfo.fulfilled]: (state, action) => {
+        //     state.isLoading = false;
+        //     state.isSuccess = true
+        //     state.agency = action.payload 
+        // },
+        // [updateAgencyInfo.rejected]: (state, action) => {
+        //     state.isLoading = false;
+        //     state.isSuccess = false
+        //     state.isError = true
+        //     state.error = action.payload;
+        // },
             
     }
 })

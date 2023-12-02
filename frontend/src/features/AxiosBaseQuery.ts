@@ -13,16 +13,16 @@ export const axiosBaseQuery =
         const token:Token = JSON.parse(localStorage.getItem('token') || "")
         header = {
             baseURL:BASE_URL,
-            headers: {
-              "Content-Type": "multipart/form-data",
-              'Authorization':`Bearer ${token.access}`,
-            },
-            // headers:{
-            //     'Authorization':`Bearer ${token.access}`,
-            //     'Content-Type':'application/json',
-            //     'Accept':'application/json',
-            //     'Content-Type': 'multipart/form-data',
-            // }
+            // headers: {
+            //   "Content-Type": "multipart/form-data",
+            //   'Authorization':`Bearer ${token.access}`,
+            // },
+            headers:{
+                'Authorization':`Bearer ${token.access}`,
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+                'Content-Type': 'multipart/form-data',
+            }
         }
      }else{
         header = {

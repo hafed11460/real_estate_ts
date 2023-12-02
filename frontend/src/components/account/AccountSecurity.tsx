@@ -8,6 +8,12 @@ import { Button, Col, Form, Row } from "react-bootstrap"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 
+export interface AccountSecurityFormData{
+    old_password:string,
+    new_password:string,
+    confirm_password:string
+}
+
 const AccountSecurity = () => {
     const [updateUserPassword, { isSuccess, isLoading, isError, error }] = useUpdateUserPasswordMutation()
     const initState = {
@@ -21,12 +27,12 @@ const AccountSecurity = () => {
         handleSubmit,
         getValues,
         formState: { errors }
-    } = useForm({
+    } = useForm<AccountSecurityFormData>({
         mode: 'onBlur',
         defaultValues: initialState,
-        errors: error
+        // errors: error
     })
-    const onSubmit = (values) => {
+    const onSubmit = (values:AccountSecurityFormData) => {
         updateUserPassword(values)
     }
     return (
@@ -42,13 +48,13 @@ const AccountSecurity = () => {
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <Row className="row align-items-end mb-2">                        
                         <Col sm={6} >
-                            <InputForm as={Col} sm={6}
+                            <InputForm
                                 register={register}
                                 getValues={getValues}
                                 errors={errors}
                                 error={error}
                                 label="Current password"
-                                name='old_password'
+                                name="old_password"
                                 type="password" />
                         </Col>
 
@@ -58,23 +64,23 @@ const AccountSecurity = () => {
                     </Row>
                     <Row className="mb-2">
                         <Col sm={12}>
-                            <InputForm as={Col} sm={6}
+                            <InputForm
                                 register={register}
                                 getValues={getValues}
                                 errors={errors}
                                 error={error}
                                 label="New password"
-                                name='new_password'
+                                name="new_password"
                                 type="password" />
                         </Col>
                         <Col sm={12}>
-                            <InputForm as={Col} sm={6}
+                            <InputForm
                                 register={register}
                                 getValues={getValues}
                                 errors={errors}
                                 error={error}
                                 label="Confirm password"
-                                name='confirm_password'
+                                name="confirm_password"
                                 type="password" />
                         </Col>
                     </Row>
@@ -84,11 +90,10 @@ const AccountSecurity = () => {
                         type="submit"
                     >
                         {isLoading && <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
+                            // animation="border"
+                            // size="sm"
+                            // role="status"
+                            // aria-hidden="true"
                         />
                         }
                         Save

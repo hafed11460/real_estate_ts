@@ -2,7 +2,12 @@ import { useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
-function AlertMessage({variant='success',header,content}) {
+interface AlertMessagProps{
+  variant?:string,
+  header?:string,
+  content?:string
+}
+function AlertMessage({variant='success',header,content}:AlertMessagProps) {
   const [show, setShow] = useState(true);
 
   if (show) {

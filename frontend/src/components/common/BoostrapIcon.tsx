@@ -1,8 +1,12 @@
+import { ReactNode } from "react";
 
-const BoostrapIcon = ({
-    size=30,
-    children,
-})=>{
+
+interface BoostrapIconProps{
+    size:number,
+    children:ReactNode
+}
+
+const BoostrapIcon = ({ size=30,    children,}:BoostrapIconProps)=>{
     return(
         <>
             {children}

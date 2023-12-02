@@ -58,7 +58,7 @@ const TopOffers = () => {
                 {
                     Array.isArray(data.results) &&  data.results && data.results.map((item, idx) => (
                         <Col key={item.id}>
-                            <PropertyCard className="mt-2" item={item} />
+                            <PropertyCard item={item} />
                         </Col>
                     ))
                 }

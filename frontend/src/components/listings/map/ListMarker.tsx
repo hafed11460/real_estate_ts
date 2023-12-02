@@ -1,11 +1,15 @@
 import hoseIconPng from "assets/icons/office-building.png";
-import { useMapProperties } from "hooks/useMapProperties";
+import { selectQueryParams } from "features/properties/map/mapSlice";
+import { useGetPropertiesQuery, useLazyGetPropertiesQuery } from "features/properties/propertyAPI";
 import { Icon } from 'leaflet';
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Button, Card, Carousel } from "react-bootstrap";
 import { Marker, Popup } from "react-leaflet";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IProperty } from "types/properties";
+
+
 const houseIcon = new Icon({
     iconUrl: hoseIconPng,
     iconSize: [40, 40]
@@ -56,12 +60,21 @@ const EstateMarker = memo(({property}:EstateMarkerProps)=>{
     )
 })
 const ListMarker = () => {
-    const { properties } = useMapProperties()
+    // const { data } = useGetPropertiesQuery({})
+    const query = useSelector(selectQueryParams)
+    const [trigger,{data,isLoading,isError,isSuccess}] = useLazyGetPropertiesQuery({})
+    // const [trigger, { data,isLoading,isError,isSuccess } ] = propertyAPI.endpoints.getProperties.useLazyQuery()
+
+    useEffect(()=>{
+        trigger(query)
+    },[])
     
+    if (isLoading) return null
+    if (isSuccess)
     return (
         <>
-            {Array.isArray(properties) && properties.map((property, idx) => (
-                <EstateMarker key={idx} property={property}/>
+            {Array.isArray(data.results) && data.results.map((property:IProperty) => (
+                <EstateMarker key={property.id} property={property}/>
             )
             )}
         </>

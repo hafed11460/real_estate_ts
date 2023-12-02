@@ -22,6 +22,7 @@ import AccountInfo from 'components/account/AccountInfo';
 import AccountSecurity from 'components/account/AccountSecurity';
 import { VendorLayout } from './VendorLayout';
 import VendorAgency from 'components/agencies/agency/VendorAgency';
+import CreateApp from 'components/agencies/property/createts/CreateApp';
 
 // const AgencyHome = React.lazy(() => import('components/agencies/agency/VendorAgency'));;
 
@@ -42,6 +43,7 @@ const Layout = () => {
                     <Route path="/" element={<Home />} />
                     {/* <Route path="/" element={<ListingsApp />} /> */}
                     <Route path="/map/" element={<ListingsApp />} />
+                    <Route path="/createapp/" element={<CreateApp />} />
                     <Route path="/agencies/" element={<AgencyList />} />
                     <Route path="/agencies/:aid/" element={<AgencyDetail />} />
                     <Route path="/properties/" element={<PropertiesApp />} />

@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useState } from "react";
 import PropertyList from "./PropertyList";
-import CreateProperty from "./CreateProperty";
+import CreateProperty from "./create/CreateProperty";
 
 type AgencyPropertyContextType = {
     position:number[],
@@ -16,6 +16,7 @@ export const AgencyPropertyContext = createContext<AgencyPropertyContextType>({
 type AgencyPropertyProviderProps = {
     children:ReactNode
 }
+
 export const PNavbar = () => {
     const [modalShow, setModalShow] = useState(false);
     return (

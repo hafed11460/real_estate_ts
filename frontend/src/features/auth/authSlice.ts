@@ -12,21 +12,24 @@ type AuthState = {
 const user:User = JSON.parse(localStorage.getItem('user') || '{}')
 const token:Token = JSON.parse(localStorage.getItem('token') || '{}')
 
+
 function isEmpty(obj: Record<string, any>): boolean {
     return Object.keys(obj).length === 0;
 }
+
+
 const initialState:AuthState = {
     user: isEmpty(user) ? null : user,
     token: isEmpty(token) ? null : token,
 }
+
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
         setLoginUser: (
-            state,
-            { payload: { user, tokens } }: PayloadAction<{ user: User, tokens: Token }>
+            state, { payload: { user, tokens } }: PayloadAction<{ user: User, tokens: Token }>
         ) => {
             if (typeof(Storage) !== "undefined"){
                 state.user = user

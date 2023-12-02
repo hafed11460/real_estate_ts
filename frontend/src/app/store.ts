@@ -1,5 +1,6 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit"
 import authReducer from 'features/auth/authSlice'
+import mapReducer from 'features/properties/map/mapSlice'
 import { authApi } from "features/auth/authApi"
 import { toolsApi } from "features/core/tools"
 import { propertyAPI } from "features/properties/propertyAPI"
@@ -11,6 +12,7 @@ import agenciesReducer from 'features/agencies/agenciesSlice'
 export const store = configureStore({
   reducer: {
     auth:authReducer,
+    map:mapReducer,
     [authApi.reducerPath]: authApi.reducer,
     [toolsApi.reducerPath]: toolsApi.reducer,
     [propertyAPI.reducerPath]: propertyAPI.reducer,

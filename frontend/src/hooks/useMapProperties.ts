@@ -1,17 +1,17 @@
 import { useGetCitiesQuery } from "features/core/tools"
 import { useGetPropertiesFilterMutation, useGetPropertiesQuery } from "features/properties/propertyAPI"
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from "react"
+import { Dispatch, createContext, useCallback, useContext, useEffect, useMemo, useReducer } from "react"
 import { ICity, IProperty, IPaginationLinks, IPosition } from "types/properties"
 
-const SET_PROPERTIES  = "SET_PROPERTIES"
-const SET_CITIES  = "SET_CITIES"
-const SET_CITY_ID  = "SET_CITY_ID"
-const SET_POSITION  = "SET_POSITION"
-const SET_SEARCH  = "SET_SEARCH"
-const SET_PROPERTY_ID  = "SET_PROPERTY_ID"
-const SET_QUERY_PARAMS  = "SET_QUERY_PARAMS"
-const SET_PAGE_LINKS = "SET_PAGE_LINKS"
-const PUSH_PROPERTIES = "PUSH_PROPERTIES"
+export const SET_PROPERTIES  = "SET_PROPERTIES"
+export const SET_CITIES  = "SET_CITIES"
+export const SET_CITY_ID  = "SET_CITY_ID"
+export const SET_POSITION  = "SET_POSITION"
+export const SET_SEARCH  = "SET_SEARCH"
+export const SET_PROPERTY_ID  = "SET_PROPERTY_ID"
+export const SET_QUERY_PARAMS  = "SET_QUERY_PARAMS"
+export const SET_PAGE_LINKS = "SET_PAGE_LINKS"
+export const PUSH_PROPERTIES = "PUSH_PROPERTIES"
 
 type ActionType = 
     | {type:"SET_PROPERTIES",payload:IProperty[]}
@@ -31,35 +31,49 @@ type PropertiesContextType = {
     search?: string
     city_id?: number,
     propertyID?: number | null,
-    position?:IPosition,
+    position:IPosition,
     queryParams?: string,
     links?: IPaginationLinks,
+    // dispatch:Dispatch<ActionType>
+    // setCityId?:(city_id:number )=>void,
+    // setPosition:(position:IPosition )=>void,
+    // setPropertyID:(property_id:number | null )=>void,
+    // setQueryParams:(query:string)=>void
+    // getPropertiesFilter:(query:string)=>void
+}
+type PropertiesDispatchContextType = {
+    dispatch:Dispatch<ActionType>   
     setCityId?:(city_id:number )=>void,
+    setPosition:(position:IPosition )=>void,
     setPropertyID:(property_id:number | null )=>void,
     setQueryParams:(query:string)=>void
     getPropertiesFilter:(query:string)=>void
 }
 
 const initState:PropertiesContextType = {
+    // dispatch: () => { },
     properties: [],
     cities: [],
     search: '',
     city_id:0,
     position:{lat:36.72440903333444,lng:3.08104183285631},
-    setCityId:(city_id:number)=>{},
-    setPropertyID:(property_id:number | null)=>{},
-    // city: null,
-    // propertyID: null,
-    // position: [latitude, longitude],
     queryParams: '',
-    // links: null
-    setQueryParams:(query:string)=>{},
-    getPropertiesFilter:(query:string)=>{}
-
+    // setCityId:(city_id:number)=>{},
+    // setPropertyID:(property_id:number | null)=>{},
+    // // city: null,
+    // // propertyID: null,
+    // // position: [latitude, longitude],
+    // // links: null
+    // setQueryParams:(query:string)=>{},
+    // getPropertiesFilter:(query:string)=>{},
+    // setPosition:(position:IPosition )=>{}
 }
-export const PropertiesContext = createContext<PropertiesContextType>(initState)
 
-export function usePropertiesSource() {
+
+export const PropertiesContext = createContext<PropertiesContextType>({} as PropertiesContextType)
+export const PropertiesDispatchContext = createContext<PropertiesDispatchContextType>({} as PropertiesDispatchContextType)
+
+export function usePropertiesSourcess() {
     const { data, isLoading, isError } = useGetPropertiesQuery({})
     const [getPropertiesFilter, { data: filterData }] = useGetPropertiesFilterMutation()
     const { data: citiesData } = useGetCitiesQuery({})
@@ -183,13 +197,13 @@ export function usePropertiesSource() {
         })
     }
 
-    const setPosition = (position:IPosition) => {
+    const setPosition = useCallback((position:IPosition) => {
         // console.log(SET_POSITION)
         dispatch({
             type: SET_POSITION,
             payload: position
         })
-    }
+    },[dispatch])
 
     const setQueryParams = (params:string) => {
         // console.log('setQueryParams', params)
@@ -231,6 +245,7 @@ export function usePropertiesSource() {
 
     return {
         // properties,
+        dispatch,
         properties: sortedProperties,
         search, setSearch,
         city_id, setCityId,
@@ -244,6 +259,9 @@ export function usePropertiesSource() {
     }
 }
 
-export function useMapProperties() {
-    return useContext(PropertiesContext)
-}
+// export function useMapProperties() {
+//     return useContext(PropertiesContext)
+// }
+// export function useMapPropertiesDispatch(){
+//     return useContext(PropertiesDispatchContext)
+// }

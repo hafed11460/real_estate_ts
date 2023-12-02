@@ -1,9 +1,11 @@
 import { Spinner } from "components/common/Spinner";
+import { selectCurrentPositionID, setPropertyID } from "features/properties/map/mapSlice";
 import { useGetPropertyMutation } from "features/properties/propertyAPI";
 import { memo, useEffect } from "react";
 import { Card, Carousel, Col, Container, Offcanvas, Row } from "react-bootstrap";
-import { useMapProperties } from "hooks/useMapProperties";
+import { useDispatch, useSelector } from "react-redux";
 import { IProperty, IPropertyImage } from "types/properties";
+// import { useMapProperties, useMapPropertiesDispatch } from "./MapPropertyProvider";
 
 // const { FaChevronRight, FaSlidersH } = require("react-icons/fa");
 
@@ -79,7 +81,8 @@ const PropertyInfo = ({ property }:{property:IProperty}) => {
 
 
 const CanvasPropertyDetail = () => {
-    const { propertyID, setPropertyID } = useMapProperties()
+    const  propertyID  = useSelector(selectCurrentPositionID)
+    const dispatch = useDispatch()
     const [getProperty, { data, isLoading, isSuccess }] = useGetPropertyMutation()
     useEffect(() => {
         if (propertyID)
@@ -97,7 +100,7 @@ const CanvasPropertyDetail = () => {
                     sm={{ span: 12 }}
                     md={{ span: 8, offset: 2 }}
                 >
-                    <Offcanvas show={!!propertyID} onHide={() => setPropertyID(null)}                        
+                    <Offcanvas show={!!propertyID} onHide={() => dispatch(setPropertyID(null))}                        
                         style={{ width: "60%" }}
                         placement="end" >
                         <Offcanvas.Header closeButton className='shadow-sm'>

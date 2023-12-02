@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { MapContainer, useMap, TileLayer, ScaleControl, Popup, Marker } from 'react-leaflet';
 import L, { Icon } from 'leaflet';
 import tileLayer from 'util/tileLayer';
@@ -7,6 +7,10 @@ import { Button, Form } from 'react-bootstrap';
 import markIcon from 'assets/icons/marker-icon.png'
 import ErrorText from 'components/common/ErrorText';
 import { AgencyPropertyContext } from '../AgencyPropertyApp';
+import InputProperty from './InputProperty';
+import { useFormContext } from 'react-hook-form';
+import { CreatePropertyFromData } from './CreateProperty';
+import { ICity } from 'types/properties';
 
 const markerIcon = new Icon({
   iconUrl: markIcon,
@@ -14,9 +18,24 @@ const markerIcon = new Icon({
 
 const center = [36.75390000, 3.05890000];
 
-const GetCoordinates = ({ newPos }) => {
+interface GetCoordinatesProps {
+  newPos: string[] | number[]
+}
+const GetCoordinates = ({ newPos }: GetCoordinatesProps) => {
+  const { setValue, getValues } = useFormContext()
+  // const { position, setPosition } = useContext(AgencyPropertyContext)
 
-  const { position, setPosition } = useContext(AgencyPropertyContext)
+  const [position, setPosition] = useState<string[]>([])
+
+  // useEffect(()=>{
+  //   const pos:string[] = getValues(['latitude','longitude'])
+  //   if (pos){
+
+  //     setPosition(pos)
+  //     if(map)
+  //       map.flyTo(pos, 13)
+  //   }
+  // },[])
 
   const map = useMap();
   useEffect(() => {
@@ -26,8 +45,12 @@ const GetCoordinates = ({ newPos }) => {
   }, [newPos])
 
   useEffect(() => {
+
     if (!map) return;
-    map.on('click', (e) => {
+
+    map.on('click', (e: any) => {
+      setValue('latitude', e.latlng.lat)
+      setValue('longitude', e.latlng.lng)
       setPosition([e.latlng.lat, e.latlng.lng])
     })
 
@@ -42,9 +65,10 @@ const GetCoordinates = ({ newPos }) => {
             setPosition([p.lat, p.lng])
           }
         }}
-        draggable={true} position={position} on icon={markerIcon}>
+        draggable={true}
+        position={position} on icon={markerIcon}>
         <Popup>
-          <Button onClick={() => setPosition(null)}>delete</Button>
+          <Button onClick={() => setPosition([])}>delete</Button>
         </Popup>
       </Marker> : null
   )
@@ -52,32 +76,38 @@ const GetCoordinates = ({ newPos }) => {
 }
 
 
-const PropertyMap = ({ register, errors, watch, error }) => {
+const PropertyMap = () => {
+  const { register, formState: { errors }, setValue ,getValues } = useFormContext<CreatePropertyFromData>()
+
+
   const { position } = useContext(AgencyPropertyContext)
   const { data: cities, isSuccess } = useGetCitiesQuery({})
-  console.log(position)
+
   const [newPos, setNewPos] = useState((position.length > 0 ? position : center))
 
 
-  const handleCityChange = event => {
+  const handleCityChange = (event: ChangeEvent<HTMLSelectElement>) => {
     if (!cities) return;
-    const city = cities.filter((c) => c.id == event.target.value)
+    const city = cities.filter((c:ICity) => `${c.id}` == event.target.value)
     setNewPos([city[0].lat, city[0].lng])
   }
 
   return (
     <div>
+
       <Form.Group className="mb-4 " >
         <Form.Label>City</Form.Label>
-        <Form.Select onChange={handleCityChange} placeholder='City'
+        <Form.Select
+          onSelect={handleCityChange}
+          placeholder='City'
           {...register("city", { required: "This Feild Is required", onChange: handleCityChange })}
         >
           <option>city</option>
-          {cities && cities.map((city) => (
-            <option selected={register('city') == city.id} key={city.id} value={city.id}>{city.name}</option>
+          {cities && cities.map((city: ICity) => (
+            <option selected={getValues('city') == `${city.id}`} key={city.id} value={city.id}>{city.name}</option>
           ))}
         </Form.Select>
-        <ErrorText name='city' error={error} />
+        {/* <ErrorText name='city' error={error} /> */}
         {errors.city && (
           <Form.Text className="text-danger">
             {errors.city.message}

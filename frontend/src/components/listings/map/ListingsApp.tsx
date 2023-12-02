@@ -1,6 +1,5 @@
-import { PropertiesContext, useMapProperties, usePropertiesSource } from 'hooks/useMapProperties';
 import "leaflet/dist/leaflet.css";
-import { memo, useEffect,UIEvent } from 'react';
+import { memo, useEffect, UIEvent } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { MapContainer, ScaleControl, TileLayer, useMap } from 'react-leaflet';
 import tileLayer from 'util/tileLayer';
@@ -9,10 +8,16 @@ import ListMarker from './ListMarker';
 import ListingCard from './ListingCard';
 import MapPropertiesFilter from './MapPropertiesFilter';
 import CanvasPropertyDetail from './CanvasPropertyDetail';
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentPosition, selectQueryParams } from "features/properties/map/mapSlice";
+import { propertyAPI, useGetPropertiesQuery, useLazyGetPropertiesQuery } from "features/properties/propertyAPI";
+import { IProperty } from "types/properties";
+// import MapPropertyProvider, { useMapProperties } from './MapPropertyProvider';
 
 
-export const NavFilter = () => {
-    const { cities, setCityId } = useMapProperties()
+export const NavFilter = memo(() => {
+    console.log('render NavFilter')
+    // const { cities, setCityId } = useMapProperties()
     return (
         <>
             <div className="border bg-white p-2"
@@ -36,29 +41,33 @@ export const NavFilter = () => {
             </div>
         </>
     )
-}
+})
 
 export const ListingsMap = memo(() => {
+    console.log('render ListingsMap')
     const map = useMap()
-    const { position } = useMapProperties()
+    const currentPosition = useSelector(selectCurrentPosition)
+    // const { position } = useMapProperties()
     useEffect(() => {
         if (!map) return;
-        if (!position) return;
-        map.flyTo(position, 13)
-    }, [map, position])
+        if (!currentPosition) return;
+        map.flyTo(currentPosition, 13)
+    }, [map, currentPosition])
 
     return null
 })
 
 
-const TheMapComponent = () => {
-    const { position } = useMapProperties()
+const TheMapComponent = memo(() => {
+    console.log('render TheMapComponent')
+    // const { position } = useMapProperties()
+    const currentPosition = useSelector(selectCurrentPosition)
     return (
         <div className=' border border-secondary border-3 w-100 vh-100 '>
             <MapContainer
 
                 style={{ height: "100%", width: "100%" }}
-                center={position}
+                center={currentPosition}
                 zoom={9}
             >
                 <TileLayer {...tileLayer} />
@@ -72,20 +81,32 @@ const TheMapComponent = () => {
             </MapContainer>
         </div>
     )
-}
+})
 
 const Listings = () => {
-    const { properties, queryParams,links } = useMapProperties()
-    const handleScroll = (event:UIEvent<HTMLDivElement>) => {
+    console.log('render Listings')
+    const query = useSelector(selectQueryParams)
+    const [trigger,{data,isLoading,isError,isSuccess}] = useLazyGetPropertiesQuery({})
+    // const [trigger, { data,isLoading,isError,isSuccess } ] = propertyAPI.endpoints.getProperties.useLazyQuery()
+
+    useEffect(()=>{
+        trigger(query)
+    },[query])
+    
+    // const { properties, queryParams, links } = useMapProperties()
+    const handleScroll = (event: UIEvent<HTMLDivElement>) => {
         if (event.currentTarget.scrollHeight === (event.currentTarget.scrollTop + event.currentTarget.offsetHeight)) {
-            console.log('params',links)
-            let nextPage =  links?.next
+            // console.log('params', links)
+            // let nextPage = links?.next
             // if (nextPage !== undefined  && nextPage !== null ){
             //     useGetPropertiesFilterMutation(nextPage.replace('http://localhost:8000/api/properties/',''))
             // }
         }
 
     }
+    if (isLoading) return <div> Loading</div>
+    if (isError ) return <div> Error</div>
+    if (isSuccess)
     return (
         <div>
             <CanvasPropertyDetail />
@@ -97,12 +118,11 @@ const Listings = () => {
                     xl={3}
                 >
                     <div className='position-relative'>
-
                         <NavFilter />
                         <div className="">
                             {
-                                properties && properties.map((item) => (                                                                            
-                                        <ListingCard  key={`property_${item.id}`} item={item} />                                
+                                data.results && data.results.map((property:IProperty) => (
+                                    <ListingCard key={`property_${property.id}`} property={property} />
                                 ))
                             }
                         </div>
@@ -110,7 +130,7 @@ const Listings = () => {
                 </Col>
 
                 <Col className=" border" xs={{ order: '1', span: 12 }} lg={{ order: '2', span: 9 }} xl={9} >
-                    {/* <TheMapComponent /> */}
+                    <TheMapComponent />
                 </Col>
             </Row>
         </div>
@@ -118,10 +138,11 @@ const Listings = () => {
 }
 
 const ListingsApp = () => {
+    console.log('render ListingsApp')
     return (
-        <PropertiesContext.Provider value={usePropertiesSource()}>
-            <Listings />
-        </PropertiesContext.Provider>
+            // <MapPropertyProvider>
+                <Listings />
+            // </MapPropertyProvider>           
     )
 }
 

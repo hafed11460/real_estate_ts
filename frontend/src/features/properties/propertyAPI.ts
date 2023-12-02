@@ -17,37 +17,40 @@ export const propertyAPI = createApi({
         }
       },
       providesTags: (result) =>
-        result ? result.map(({ id }) => ({ type: 'Properties', id })) : ['Properties'],
+        result ? result.map(({ id }: { id: number }) => ({ type: 'Properties', id })) : ['Properties'],
     }),
 
     getProperties: builder.query({
-      query: () => {
+      query: (params = null) => {
+        console.log("---------------")
         return {
-          url: `${properties_root}/`,
+          url: `${properties_root}/${params != null ? params : ''}`,
           method: 'GET',
           data: {},
         }
       },
+
       providesTags: (data) =>
-        data ? data.results.map(({ id }:{id:number}) => ({ type: 'Properties', id })) : ['Properties'],
+        data ? data.results.map(({ id }: { id: number }) => ({ type: 'Properties', id })) : ['Properties'],
     }),
 
     getPropertiesFilter: builder.mutation({
-      query: (params=null) => {
+      query: (params = null) => {
         return {
-          url: `${properties_root}/${params}`,
+          url: `${properties_root}/${params != null ? params : ''}`,
           method: 'GET',
           data: {},
         }
       },
-      providesTags: (data) =>
-        data ? data.results.map(({ id }) => ({ type: 'Properties', id })) : ['Properties'],
+      // providesTags: (data) =>
+      //   data ? data.results.map(({ id }: { id: number }) => ({ type: 'Properties', id })) : ['Properties'],
     }),
 
+
     getPropertyId: builder.query({
-      query: (id) =>{
+      query: (id) => {
         console.log(id)
-        return{
+        return {
           url: `properties/${id}/`,
           method: 'GET',
           data: {}
@@ -55,6 +58,8 @@ export const propertyAPI = createApi({
       },
       providesTags: (result, error, id) => [{ type: 'Properties', id }],
     }),
+
+
     getProperty: builder.mutation({
       query: (id) => {
         return {
@@ -63,8 +68,9 @@ export const propertyAPI = createApi({
           data: {}
         }
       },
-      providesTags: (result, error, id) => [{ type: 'Properties', id }],
+      // providesTags: (result, error, id) => [{ type: 'Properties', id }],
     }),
+
 
     addProperty: builder.mutation({
       query: (body) => {
@@ -80,6 +86,7 @@ export const propertyAPI = createApi({
       invalidatesTags: ['Properties']
     }),
 
+
     updateProperty: builder.mutation({
       query: (body) => {
         for (const pair of body.entries()) {
@@ -93,14 +100,30 @@ export const propertyAPI = createApi({
       },
       invalidatesTags: ['Properties']
     }),
-
     deleteProperty: builder.mutation({
-      query: ({ id }) => ({
-        url: `properties/${id}/delete/`,
-        method: 'DELETE',
-      }),
+      query: (body) => {       
+        return {
+          url: `properties/${body.get('id')}/update/`,
+          method: 'PUT',
+          data: body
+        }
+      },
       invalidatesTags: ['Properties']
     }),
+
+
+    // deleteProperty: builder.mutation({
+    //   query: (body) => {
+
+    //     return {
+    //       url: `properties/${body.id}/delete/`,
+    //       method: 'DELETE',
+    //     }
+    //   },
+    //   invalidatesTags: ['Properties']
+    // }),
+
+
     getAmenities: builder.query({
       query: () => {
         return {
@@ -110,7 +133,7 @@ export const propertyAPI = createApi({
         }
       },
       providesTags: (result) =>
-        result ? result.map(({ id }) => ({ type: 'Properties', id })) : ['Properties'],
+        result ? result.map(({ id }: { id: number }) => ({ type: 'Properties', id })) : ['Properties'],
     }),
   }),
 })
@@ -119,12 +142,15 @@ export const {
   useGetPropertyIdQuery,
   useGetAgencyPropertiesQuery,
   useAddPropertyMutation,
+
   useGetPropertiesQuery,
-  useGetPropertyMutation,
   useLazyGetPropertiesQuery,
+
+  useGetPropertyMutation,
   useUpdatePropertyMutation,
   useDeletePropertyMutation,
   useGetAmenitiesQuery,
   useGetPropertiesFilterMutation
 
 } = propertyAPI
+

@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { axiosBaseQuery } from 'features/axiosBaseQuery'
+import { axiosBaseQuery } from 'features/AxiosBaseQuery'
 
 
 export const agencyAPI = createApi({
@@ -37,7 +37,7 @@ export const agencyAPI = createApi({
           data: {}
         }
       },
-      providesTags: (result, error, id) => [{ type: 'Agencies', id }],
+      // providesTags: (result, error, id) => [{ type: 'Agencies', id }],
     }),
 
     updateAgencyInfo: builder.mutation({

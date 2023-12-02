@@ -27,14 +27,14 @@ export interface IAmenity {
     name: string
 }
 export interface IPosition {
-    lat: number,
-    lng: number
+    lat: string | number ,
+    lng: string | number
 }
 
 export interface IProperty {
-    id?: number,
-    title?: string,
-    description?: string,
+    id: number,
+    title: string,
+    description: string,
     category?: string,
     property_type?: string,
     city?: ICity,
@@ -45,9 +45,9 @@ export interface IProperty {
     amenities?: IAmenity[]
     rooms?: number,
     agency?: IAgency
-    latitude?: string,
-    longitude?: string,
-    images?: IPropertyImage[]
+    latitude?: string | number,
+    longitude?: string | number,
+    images: IPropertyImage[]
     created_at?: string
 }
 

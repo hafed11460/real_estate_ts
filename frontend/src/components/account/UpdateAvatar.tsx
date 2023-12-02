@@ -13,18 +13,21 @@ const UpdateAvatar = () => {
     const [show, setShow] = useState(false);
     const size = 280
     const [imagesSRC, setImagesSRC] = useState(user?.avatar)
-    const [avatar, setAvatar] = useState()
+    const [avatar, setAvatar] = useState<File>()
 
     const onSubmit = async () => {
         let newData = new FormData()
-        newData.append('image', avatar, avatar.name)
+        newData.append('image', avatar as Blob)
         updateUserAvatar(newData).unwrap()
     };
-
-    const handleFileChange = (e) => {
+    
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log('handle file change ')
-        setAvatar(e.target.files[0])
-        setImagesSRC(URL.createObjectURL(e.target.files[0]))
+        const { files } = event.target;
+        const selectedFiles = files as FileList;
+
+        setAvatar(selectedFiles?.[0])
+        setImagesSRC(URL.createObjectURL(selectedFiles?.[0]))
     }
 
     // const onSubmit = async () => {

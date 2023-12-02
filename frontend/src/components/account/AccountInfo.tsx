@@ -1,9 +1,9 @@
 import ErrorText from "components/common/ErrorText"
 import { Spinner } from "components/common/Spinner"
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from "features/auth/authApi"
-import { useEffect, useState } from "react"
+import { InputHTMLAttributes, useEffect, useState } from "react"
 import { Button, Col, Collapse, Form } from "react-bootstrap"
-import { useForm } from "react-hook-form"
+import { FieldValue, FieldValues, UseFormGetValues, UseFormProps, UseFormRegister, useForm } from "react-hook-form"
 import { FaEdit } from "react-icons/fa"
 
 const SocilaInfo = () => {
@@ -37,13 +37,31 @@ const SocilaInfo = () => {
         </>
     )
 }
+type FormData =  {
+    first_name:string,
+    last_name:string,
+    email:string,
+}
 
+interface CollapseEditProps{
+    register: UseFormRegister<FormData>,
+    getValues: UseFormGetValues<FormData>,
+    label:string,
+    type:string,
+    name:"first_name" | "last_name" | "email",
+    errors:any,
+    error?:any,
+}
 
 const CollapseEdit = ({
-    register, getValues,
-    name, label,
-    type, error, errors
-}) => {
+    register, 
+    getValues,
+    name,
+    label,
+    type,
+    error,
+    errors
+}:CollapseEditProps) => {
     const [open, setOpen] = useState(false)
     return (
         <div className="border-bottom pb-3 mb-3">
@@ -84,7 +102,7 @@ const CollapseEdit = ({
 
 const AccountInfo = () => {
     const [updateUserInfo, { isSuccess, isLoading, isError, error }] = useUpdateUserInfoMutation()
-    const { data: userInfo } = useGetUserInfoQuery()
+    const { data: userInfo } = useGetUserInfoQuery({})
 
     const {
         register,
@@ -92,9 +110,9 @@ const AccountInfo = () => {
         getValues,
         reset,
         formState: { errors }
-    } = useForm({
+    } = useForm<FormData>({
         mode: 'onBlur',
-        errors: error
+        // errors: error
     })
 
     useEffect(() => {
@@ -108,7 +126,7 @@ const AccountInfo = () => {
     }, [userInfo])
 
 
-    const onSubmit = values => {
+    const onSubmit = (values:FormData) => {
         updateUserInfo(values)
     }
     return (
@@ -120,7 +138,7 @@ const AccountInfo = () => {
                             getValues={getValues}
                             errors={errors}
                             label="First Name"
-                            name='first_name'
+                            name="first_name"
                             type="text" />
 
                         <CollapseEdit
@@ -142,13 +160,7 @@ const AccountInfo = () => {
                             variant="primary"
                             type="submit"
                         >
-                            {isLoading && <Spinner
-                                as="span"
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                            />
+                            {isLoading && <Spinner/>
                             }
                             Save
                         </Button>
