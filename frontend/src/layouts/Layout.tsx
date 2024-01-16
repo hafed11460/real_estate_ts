@@ -62,10 +62,9 @@ const Layout = () => {
                             <Route path="/vendor/agency/" element={<VendorAgency />} />
                         </Route>
                     </Route>
-
                 </Route> 
             </Routes>
-            <ToastContainer
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
@@ -75,7 +74,7 @@ const Layout = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-            />
+            /> */}
         </>
     )
 }

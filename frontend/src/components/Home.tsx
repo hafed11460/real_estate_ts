@@ -2,13 +2,17 @@ import { Card, Col, Container, Row } from "react-bootstrap"
 import { BsHouseFill } from "react-icons/bs"
 import { ReactNode } from "react"
 import { useGetPropertiesQuery } from "features/properties/propertyAPI"
+import { IProperty } from "types/properties"
+import PropertyCard from "./listings/properties/PropertyCard"
+import { selectQueryParams } from "features/properties/map/mapSlice"
+import { useSelector } from "react-redux"
 
 const Section = ({children}:{children:ReactNode}) => {
 
     return (
-        <Container className="py-5 my-4 shadow-sm ">
+        <section className="mb-5 pb-5 my-4 container ">
             {children}
-        </Container>
+        </section>
     )
 }
 
@@ -49,16 +53,17 @@ const AddToday = () => {
 }
 
 const TopOffers = () => {
-    const { data } = useGetPropertiesQuery({})
+    const query = useSelector(selectQueryParams)
+    const { data } = useGetPropertiesQuery(query)
     if (!data) return null
     return (
         <Section>
             <h2>Top Offers</h2>
-            <Row md={3} sm={2} xl={3} >
+            <Row md={3} sm={2} xl={4} >
                 {
-                    Array.isArray(data.results) &&  data.results && data.results.map((item, idx) => (
-                        <Col key={item.id}>
-                            <PropertyCard item={item} />
+                    Array.isArray(data.results) &&  data.results && data.results.map((item:IProperty) => (
+                        <Col className="mb-3" key={item.id}>
+                            <PropertyCard property={item} />
                         </Col>
                     ))
                 }
@@ -71,8 +76,8 @@ const Home = () => {
     return (
         <div className="bg-white pt-5">
             <PropertyType />
-            {/* <TopOffers /> */}
-            {/* <AddToday /> */}
+            <TopOffers />
+            <AddToday />
         </div>
     )
 }

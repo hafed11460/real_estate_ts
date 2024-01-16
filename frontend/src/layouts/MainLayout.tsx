@@ -2,7 +2,6 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import TopNavbar from "components/navbar/top/TopNavbar";
 
-import VerticalNavbar from "components/navbar/vertical/VerticalNavbar";
 
 const MainLayout = () => {
     return (

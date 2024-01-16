@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import UserAvatar from "components/common/UserAvatar"
 import useAuth from "hooks/useAuth";
 import UpdateAvatar from "./UpdateAvatar";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "features/auth/authSlice";
+import { User } from "features/auth/authApi";
 const size = 25
 const items = [
     {
@@ -39,11 +42,10 @@ const items = [
 ]
 
 const AccountCard = ()=>{
-    const {user} = useAuth()
     return(
         <Card className="mb-3">
             <Card.Body>
-                <UserAvatar src={user.avatar} size={200}/>
+                <UserAvatar  size={200}/>
                 <UpdateAvatar/> 
             </Card.Body>
         </Card>

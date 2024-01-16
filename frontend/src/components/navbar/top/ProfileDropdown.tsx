@@ -30,6 +30,7 @@ const ProfileDropdwon = () => {
         navigate('/login/')
     }
 
+    if (!user) return null
 
     return (
         <Dropdown navbar={true} as="li" >
@@ -42,7 +43,7 @@ const ProfileDropdwon = () => {
                 <div className="user-menu d-flex">
                     <div className="user-img d-flex align-items-center">
                         <div className="avatar avatar-md">
-                            <Avatar src={user && user.avatar} size={40} />
+                            <Avatar src={user && user?.avatar} size={40} />
                         </div>
                     </div>
                     <div className="user-name text-start ms-3">

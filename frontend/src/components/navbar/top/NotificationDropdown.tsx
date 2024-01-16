@@ -3,20 +3,23 @@ import { Card, Dropdown, ListGroup } from "react-bootstrap";
 import { BsBell } from 'react-icons/bs'
 import { Link } from "react-router-dom";
 // import { rawNewNotifications,notifications } from "data/notification/notification";
-import createMarkup from "helpers/createMarkup";
+// import createMarkup from "helpers/createMarkup";
 import { iconSize } from "value";
-export const NotificationItem = ({
-    avatar,
-    children,
-}) => {
+import { ReactNode } from "react";
+
+interface NotificationItemProps{
+    avatar:string,
+    children:ReactNode
+}
+export const NotificationItem = ({    avatar,   children,}:NotificationItemProps) => {
     return (
-        <ListGroup.Item as={Link}>
+        <ListGroup.Item as={Link} to={'/'}>
             <div className="d-flex">
                 <div className="flex-shrink-0">
-                    <Avatar {...avatar} size={45} />
+                    <Avatar src={avatar} size={45} />
                 </div>
                 <div className="flex-grow-1 ms-2">
-                    <p dangerouslySetInnerHTML={createMarkup(children)}/>
+                    {/* <p dangerouslySetInnerHTML={createMarkup(children)}/> */}
                 </div>
             </div>
         </ListGroup.Item>

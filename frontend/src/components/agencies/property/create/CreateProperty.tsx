@@ -1,6 +1,6 @@
 
-import { ChangeEvent, useContext, useState } from "react";
-import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
+import { ChangeEvent, ReactNode, useContext, useState } from "react";
+import { Button, Card, Col, Form, Modal, Nav, Row, Spinner } from "react-bootstrap";
 
 import { useAddPropertyMutation } from "features/properties/propertyAPI";
 import { useEffect } from "react";
@@ -13,6 +13,7 @@ import ImagesForm from "./ImagesForm";
 import ContactForm from "./ContactForm";
 import DetailForm from "./DetailForm";
 import { AgencyPropertyContext } from "../AgencyPropertyApp";
+import { BsFileLock, BsGeoAltFill, BsGithub, BsHourglassBottom } from "react-icons/bs";
 
 
 type CreatePropertyProps = {
@@ -24,11 +25,11 @@ export interface BasicInfoForm {
     description: string,
     category: string,
     property_type: string,
-    price:string,
+    price: string,
 }
 
 export interface LocationFrom {
-    latitude:string,
+    latitude: string,
     longitude: string,
     city: string,
 }
@@ -38,8 +39,8 @@ export interface ImagesFrom {
 }
 
 export interface DetailForm {
-    total_area:  string,
-    rooms:  string,
+    total_area: string,
+    rooms: string,
     borough: string,
     price_per: string,
     amenities: string[],
@@ -81,6 +82,7 @@ const initState = {
 }
 
 
+
 export function useCreatePropertyForm() {
     const methods = useForm<CreatePropertyFromData>({
         defaultValues: initState
@@ -92,18 +94,70 @@ export function useCreatePropertyForm() {
     }
 }
 
+const iconSize = 25
+const navItems = [
+    {
+        icon: <BsFileLock size={iconSize} />,
+        label: 'Account'
+    },
+    {
+        icon: <BsGithub size={iconSize} />,
+        label: 'Personal'
+    },
+    {
+        icon: <BsGeoAltFill size={iconSize} />,
+        label: 'Billing'
+    },
+    {
+        icon: <BsHourglassBottom size={iconSize} />,
+        label: 'Contact'
+    },
+    {
+        icon: <BsHourglassBottom size={iconSize} />,
+        label: 'Map'
+    }
+];
 
+interface NavItemPillProps {
+    key: string,
+    index: number,
+    step: number,
+    // handleNavs={handleNavs}
+    icon: ReactNode,
+    label: string
+    handleNavs: (index: number) => void
+}
+const NavItemPill = ({ key, index, step, icon, label, handleNavs }: NavItemPillProps) => {
+    return (
+        <Nav.Item className=" m-1">
+            <Button
+                style={{maxWidth:'100px',minWidth:'100px'}}
+                variant={index == step ? 'primary' : index < step ? 'success':''}
+            // onClick={() => handleNavs(index)}
+            // className={index == step ? 'active' : ''} 
+            >
+                <div className="d-flex flex-column justify-content-center"  >
+                    <div className="text-center">
+                        {icon}
+                    </div>
+                    <span className="d-none d-md-block mt-1 fs-10 ms-2">
+                        {label}
+                    </span>
+                </div>
+            </Button>
+        </Nav.Item>
+    )
+}
 
 const CreateProperty = (props: CreatePropertyProps) => {
-    const { register, handleSubmit, ...methods } = useCreatePropertyForm()
+    const { register,...methods } = useCreatePropertyForm()
     const lastStep = 5
     console.log('rundering CreateProperty')
-    const [show, setShow] = useState(true);
+    const [show, setShow] = useState(false);
     const [addProperty, { isLoading, isSuccess, isError, error }] = useAddPropertyMutation()
 
     // const { position } = useContext(AgencyPropertyContext)
     const [step, setStep] = useState(1)
-
 
     // const [initialValues, setInitialValues] = useState(initState);
 
@@ -132,15 +186,13 @@ const CreateProperty = (props: CreatePropertyProps) => {
             }
 
             for (let i = 0; i < values.images.length; i++) {
+                console.log(values.images[i])
                 newData.append('images', values.images[i])
             }
-            addProperty(newData).unwrap()
+            addProperty(newData)
         }
 
     };
-
-
-
 
     const handelStep = () => {
         setStep(step - 1)
@@ -154,6 +206,10 @@ const CreateProperty = (props: CreatePropertyProps) => {
         }
     }, [isSuccess])
 
+    const handleNavs = (index: number) => {
+        setStep(index)
+    }
+
     return (
         <FormProvider {...methods} register={register} >
             <Button onClick={() => setShow(!show)}>
@@ -161,49 +217,78 @@ const CreateProperty = (props: CreatePropertyProps) => {
             </Button>
 
             <Modal
+                className="p-0 m-0"
                 show={show}
                 size="lg"
                 onHide={() => setShow(false)}
                 centered
                 aria-labelledby="contained-modal-title-vcenter"
-
             >
+                <Modal.Body
+                    className="p-0"
+                // className=" mb-4 mt-3 px-5 pt-5"
+                >
+                    <Card as={Form} onSubmit={methods.handleSubmit(onSubmitData)} style={{ minHeight: "550px",minWidth:'650px' }}>
+                        <Card.Header
+                        // className={classNames('bg-body-tertiary', {
+                        //     'px-4 py-3': variant === 'pills',
+                        //     'pb-2': !variant
+                        // })}
+                        >
+                            <Nav variant="pills" className="justify-content-center" >
+                                {navItems.map((item, index) => (
+                                    <NavItemPill
 
-                <Modal.Body className=" mb-4 mt-3 px-5 pt-5">
-                    <Form onSubmit={handleSubmit(onSubmitData)} style={{ minHeight: "450px" }}>
-                        {step == 1 && (
-                            <InfoCreateForm />
-                        )}
-                        {step == 2 && (
-                            <DetailForm />
-                        )}
+                                        key={item.label}
+                                        index={index + 1}
+                                        step={step}
+                                        handleNavs={handleNavs}
+                                        icon={item.icon}
+                                        label={item.label}
+                                    />
+                                ))
+                                }
+                            </Nav>
+                        </Card.Header>
+                        <Card.Body>
+                            {step == 1 && (
+                                <InfoCreateForm />
+                            )}
+                            {step == 2 && (
+                                <DetailForm />
+                            )}
 
 
-                        {step == 3 && (
-                            <ImagesForm/>
-                        )}
+                            {step == 3 && (
+                                <ImagesForm />
+                            )}
 
-                        {step == 4 && (
-                            <ContactForm />
-                        )}
+                            {step == 4 && (
+                                <ContactForm />
+                            )}
 
-                        {step == 5 && (
-                            <PropertyMap />
-                        )}
+                            {step == 5 && (
+                                <PropertyMap />
+                            )}
 
-                        <div className="d-flex justify-content-between mt-3 ">
-                            <div>
-                                {step > 1 && <Button variant="light" onClick={handelStep}>
-                                    <FaAngleLeft size={20} />Prev
-                                </Button>}
+                        </Card.Body>
+                        <Card.Footer>
+
+                            <div className="d-flex justify-content-between mt-3 ">
+                                <div>
+                                    {step > 1 && <Button variant="light" onClick={handelStep}>
+                                        <FaAngleLeft size={20} />Prev
+                                    </Button>}
+                                </div>
+                                <div>
+                                    <Button type="submit" variant="primary" >
+                                        Next<FaAngleRight size={20} />
+                                    </Button>
+                                </div>
                             </div>
-                            <div>
-                                <Button type="submit" variant="primary" >
-                                    Next<FaAngleRight size={20} />
-                                </Button>
-                            </div>
-                        </div>
-                    </Form>
+                        </Card.Footer>
+                    </Card>
+
                 </Modal.Body>
             </Modal>
         </FormProvider>

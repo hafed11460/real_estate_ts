@@ -11,14 +11,14 @@ class PropertiesService{
         return http.get('/properties/')
     }    
 
-    createProperty(data){
+    createProperty(data:any){
         return http.post('/properties/create/',data)
     }
-    updateProperty(post){
+    updateProperty(post:any){
         console.log('post updata',post)
         return http.put(`/properties/${post.get('id')}/update/`,post)
     }
-    deleteProperty(postId){
+    deleteProperty(postId:any){
         return http.delete(`/properties/${postId}/delete`)
     }
 }

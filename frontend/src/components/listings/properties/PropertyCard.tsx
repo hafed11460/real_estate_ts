@@ -9,7 +9,7 @@ type PropertyCardProps = {
 
 export const PropertyCard = ({property}:PropertyCardProps) => {
     return (
-        <Card className=" border shadow-sm h-100 rounded-top ">
+        <Card className="mt-3 border shadow-sm  h-100 rounded-top ">
             {
                 <Carousel indicators={false}>
                     {Array.isArray(property.images) && property.images.map((img,idx )=> (

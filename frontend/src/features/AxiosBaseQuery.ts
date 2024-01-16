@@ -19,7 +19,7 @@ export const axiosBaseQuery =
             // },
             headers:{
                 'Authorization':`Bearer ${token.access}`,
-                'Content-Type':'application/json',
+                // 'Content-Type':'application/json;multipart/form-data',
                 'Accept':'application/json',
                 'Content-Type': 'multipart/form-data',
             }

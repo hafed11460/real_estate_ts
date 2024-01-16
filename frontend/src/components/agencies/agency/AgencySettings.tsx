@@ -5,10 +5,16 @@ import { Button, Card, Col, Form, Row, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
+interface SettingFormData{
+    name:string,
+    phone:string,
+    bio:string
+
+}
 
 const AgencySettings = () => {
     const effectRun = useRef(false)
-    const [getAgencyInfo,    { data: agency, }] = useGetAgencyInfoMutation()
+    const [getAgencyInfo,    { data: agency }] = useGetAgencyInfoMutation({})
 
     const [updateAgencyInfo, { data, isSuccess:isUpdated,error,isLoading }] = useUpdateAgencyInfoMutation()
 
@@ -16,14 +22,15 @@ const AgencySettings = () => {
         register,
         handleSubmit,
         reset,
+        getValues,
         formState: { errors }
-    } = useForm({
+    } = useForm<SettingFormData>({
         mode: 'onBlur',
-        errors: error
+        // errors: error
     })
     useEffect(() => {
         if(effectRun.current === false){
-            getAgencyInfo()
+            getAgencyInfo({})
         }
         return ()=>{
             effectRun.current = true
@@ -40,8 +47,15 @@ const AgencySettings = () => {
             })
     }, [agency])
 
-    const onSubmit = (values) => {
-        updateAgencyInfo(values)
+    const onSubmit = (values:SettingFormData) => {
+        const formData = new FormData()
+       
+        console.log(values)
+        for (const [key, value] of Object.entries(values)) {
+            console.log(`${key}: ${value}`);
+            formData.append(key,value)
+          }
+        updateAgencyInfo(formData)
     };
     // if (isLoading) return <div>Loading...</div>
     // if (!agency) return <div>Missing post!</div>

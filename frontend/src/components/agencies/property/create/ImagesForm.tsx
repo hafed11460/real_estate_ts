@@ -56,7 +56,7 @@ const ImagesForm = () => {
                         </Form.Text>
                     )}
                 </div>
-                <div className="d-flex flex-column align-items-center pt-2 border bg-light shadow-sm rounded">
+                <div className={`d-flex flex-column align-items-center pt-2 border bg-light shadow-sm rounded ${errors.images ? 'border-danger-subtle':''}`}>
                     <div>
                         <BsCardImage className="text-success" size={iconSize} /> Images
                     </div>

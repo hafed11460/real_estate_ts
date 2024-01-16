@@ -2,7 +2,11 @@ import { Dropdown } from "react-bootstrap";
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from "react-router-dom";
 import { iconSize } from "value";
-const MessageDropdown = (props) => {
+
+interface MessageDropdownProps{
+    width:number
+}
+const MessageDropdown = ({width}:MessageDropdownProps) => {
     return (
         <Dropdown navbar={true} as='li'>
             <Dropdown.Toggle
@@ -14,7 +18,7 @@ const MessageDropdown = (props) => {
                 <BsChatLeftText size={iconSize} />
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu-end mt-2"
-                style={{ minWidth: `${props.width}px`, maxWidth: `${props.width}px` }}>
+                style={{ minWidth: `${width}px`, maxWidth: `${width}px` }}>
                 <Dropdown.Item>Event 1</Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>

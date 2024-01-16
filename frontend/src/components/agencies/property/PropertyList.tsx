@@ -21,7 +21,7 @@ const PropertyList = () => {
                 {
                     Array.isArray(properties) && properties.map((item, idx) => (
                         <Col key={idx}>
-                            <PropertyCard  key={item.id} post={item} />
+                            <PropertyCard  key={item.id} property={item} />
                         </Col>
                     ))
                 }

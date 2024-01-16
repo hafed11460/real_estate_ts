@@ -19,7 +19,10 @@ interface MapState {
 }
 
 const initialState: MapState = {
-    currentPosition: { lat: 36.72440903333444, lng: 3.08104183285631 },
+    currentPosition: {
+        lat: 36.72440903333444,
+        lng: 3.08104183285631
+    },
     propertyId: null,
     query: '',
     mapfilter: {
@@ -36,9 +39,9 @@ export const mapSlice = createSlice({
         setPropertyType: (state, { payload }: PayloadAction<string>) => {
             const findIdx = state.mapfilter.propertyType.indexOf(payload)
             if (findIdx > -1) {
-                state.mapfilter.propertyType = state.mapfilter.propertyType.filter(p => p !== payload)              
-            }   else {
-                state.mapfilter.propertyType.push(payload)               
+                state.mapfilter.propertyType = state.mapfilter.propertyType.filter(p => p !== payload)
+            } else {
+                state.mapfilter.propertyType.push(payload)
             }
         },
         updatePrice: (state, { payload }: PayloadAction<IPrice>) => {

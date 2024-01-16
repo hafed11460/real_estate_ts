@@ -46,8 +46,9 @@ const PropertiesPagination = () => {
     )
 }
 
+
 const PropertiesList = () => {
-    const { data } = useGetPropertiesQuery({})
+    const { data } = useGetPropertiesQuery(null)
     if (!data) return <h3>No results</h3>
     return (
         <div  className="bg-white rounded p-3">
@@ -67,5 +68,6 @@ const PropertiesList = () => {
         </div>
     )
 }
+
 
 export default  PropertiesList

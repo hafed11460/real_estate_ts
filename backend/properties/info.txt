@@ -1,0 +1,35 @@
+# basic info 
+    - title 
+    - category [for rent , for sal]
+    - property type [Apartment, House , Commercial, daily rental, New building]
+
+
+# Locatiion 
+    - City
+    - Position 
+
+#Property Detail 
+    - Total area 
+    - rooms 
+    - Bathrooms
+    - Parking spots 
+    - Description
+    - Amenities -> manytomany
+
+
+# price 
+    - price
+    - per [day, week, month , year ]
+
+# Photo / Video 
+    - Photos 
+    - Video
+
+# Contacts 
+    - First_name
+    - last_name
+    - email 
+    - Phone Number
+    - 
+
+

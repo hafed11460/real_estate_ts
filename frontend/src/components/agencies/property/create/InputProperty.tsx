@@ -14,7 +14,6 @@ interface InputProps {
 const InputProperty = memo(({ label, type, name, message, options, size=12 }: InputProps) => {
     const { register, formState: { errors } } = useFormContext<CreatePropertyFromData>()
 
-
     return (
         <Form.Group as={Col} md={size} className="mb-3">
             <Form.Label>{label}</Form.Label>
@@ -31,8 +30,8 @@ const InputProperty = memo(({ label, type, name, message, options, size=12 }: In
                 type == "select" && <Form.Select
                     {...register(name, { required: message })}
                 >
-                    {options?.map((option) => (
-                        <option value={option}>{option}</option>
+                    {options?.map((option,index) => (
+                        <option key={index} value={option}>{option}</option>
                     ))}
                 </Form.Select>
 

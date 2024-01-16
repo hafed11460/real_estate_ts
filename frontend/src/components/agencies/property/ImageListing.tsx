@@ -1,7 +1,11 @@
 import React from 'react'
 import { Image } from 'react-bootstrap'
 
-const  ImageListing =({src})=> {
+interface ImageListingProps{
+  src:string
+}
+
+const  ImageListing =({src}:ImageListingProps)=> {
   return (
     <Image fluid src={src}>
 

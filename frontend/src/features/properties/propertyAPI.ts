@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { axiosBaseQuery } from 'features/AxiosBaseQuery'
 
 const properties_root = '/properties'
+
 export const propertyAPI = createApi({
   reducerPath: 'propertyAPI',
   baseQuery: axiosBaseQuery(),
@@ -83,7 +84,24 @@ export const propertyAPI = createApi({
           data: body
         }
       },
-      invalidatesTags: ['Properties']
+      async onQueryStarted(args, { queryFulfilled, dispatch }) {
+
+        try {
+
+            const { data: createdProject } = await queryFulfilled;
+
+            dispatch(
+                propertyAPI.util.updateQueryData('getProperties', undefined, (draft) => {
+                    draft?.push(createdProject)
+                })
+            )
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+      // invalidatesTags: ['Properties']
     }),
 
 

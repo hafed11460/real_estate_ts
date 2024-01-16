@@ -45,7 +45,7 @@ function useCreateTestForm() {
 const CreateApp = () => {
     const [step, setStep] = useState(1)
     const lastStep = 2
-    const { register, handleSubmit, onSubmit, ...methods } = useCreateTestForm()
+    const { register, ...methods } = useCreateTestForm()
     
 
     const onSubmitData = (values:CreateTestFromData) => {
@@ -63,7 +63,7 @@ const CreateApp = () => {
     return (
         <Container>
             <FormProvider {...methods} register={register} >
-                <Form onSubmit={handleSubmit(onSubmitData)} style={{ minHeight: "450px" }} >
+                <Form onSubmit={methods.handleSubmit(onSubmitData)} style={{ minHeight: "450px" }} >
                     {step == 1 && (
                         <ContactForm />
                     )}

@@ -1,17 +1,17 @@
 import "leaflet/dist/leaflet.css";
-import { memo, useEffect, UIEvent } from 'react';
+import { UIEvent, memo, useEffect } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { MapContainer, ScaleControl, TileLayer, useMap } from 'react-leaflet';
 import tileLayer from 'util/tileLayer';
 // import CanvasPropertyDetail from './CanvasPropertyDetail';
+import { selectCurrentPosition, selectQueryParams } from "features/properties/map/mapSlice";
+import { useLazyGetPropertiesQuery } from "features/properties/propertyAPI";
+import { useSelector } from "react-redux";
+import { IProperty } from "types/properties";
+import CanvasPropertyDetail from './CanvasPropertyDetail';
 import ListMarker from './ListMarker';
 import ListingCard from './ListingCard';
 import MapPropertiesFilter from './MapPropertiesFilter';
-import CanvasPropertyDetail from './CanvasPropertyDetail';
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentPosition, selectQueryParams } from "features/properties/map/mapSlice";
-import { propertyAPI, useGetPropertiesQuery, useLazyGetPropertiesQuery } from "features/properties/propertyAPI";
-import { IProperty } from "types/properties";
 // import MapPropertyProvider, { useMapProperties } from './MapPropertyProvider';
 
 
@@ -67,7 +67,7 @@ const TheMapComponent = memo(() => {
             <MapContainer
 
                 style={{ height: "100%", width: "100%" }}
-                center={currentPosition}
+                center={[currentPosition.lat,currentPosition.lng]}
                 zoom={9}
             >
                 <TileLayer {...tileLayer} />
@@ -96,11 +96,13 @@ const Listings = () => {
     // const { properties, queryParams, links } = useMapProperties()
     const handleScroll = (event: UIEvent<HTMLDivElement>) => {
         if (event.currentTarget.scrollHeight === (event.currentTarget.scrollTop + event.currentTarget.offsetHeight)) {
-            // console.log('params', links)
-            // let nextPage = links?.next
-            // if (nextPage !== undefined  && nextPage !== null ){
-            //     useGetPropertiesFilterMutation(nextPage.replace('http://localhost:8000/api/properties/',''))
-            // }
+            if (data.links){
+                console.log(data.links)
+                // let nextPage = links?.next
+                // if (nextPage !== undefined  && nextPage !== null ){
+                //     useGetPropertiesFilterMutation(nextPage.replace('http://localhost:8000/api/properties/',''))
+                // }
+            }
         }
 
     }

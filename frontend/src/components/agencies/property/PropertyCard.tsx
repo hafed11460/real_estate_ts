@@ -5,7 +5,7 @@ import { Card, Col, Dropdown } from "react-bootstrap"
 import { BsPencilSquare, BsThreeDots, BsTrash } from "react-icons/bs"
 import { iconSize, iconSize_sm } from "value"
 import ImageListing from "./ImageListing"
-import EditProperty from "./EditProperty"
+// import EditProperty from "./EditProperty"
 import useAuth from "hooks/useAuth"
 import { IProperty } from "types/properties"
 import { useSelector } from "react-redux"
@@ -35,7 +35,11 @@ const PostDropdownMenu = memo(({ postId, handleEditProperty }:DropdownMenuProps)
         </MDropdown>
     )
 })
-const PropertyCard = ({ post }:{post:IProperty}) => {
+
+interface PropertyCardProps{
+    property:IProperty
+}
+const PropertyCard = ({ property }:PropertyCardProps) => {
     const user:User | null  = useSelector(selectCurrentUser)
     console.log('PropertyCard redering ')
     const [editPost, setEditPost] = useState(false);
@@ -46,27 +50,27 @@ const PropertyCard = ({ post }:{post:IProperty}) => {
 
     return (
         <div>
-            <EditProperty id={post.id} 
-                show={editPost} onHide={() => setEditPost(false)}/>
+            {/* <EditProperty id={property.id} 
+                show={editPost} onHide={() => setEditPost(false)}/> */}
             
             <Card className="mt-3 border">
                 <div className="d-flex p-2">
                     <div className="d-flex justify-content-between">
                         <div className="d-flex align-items-center">
                             <div className="flex-grow-1 ms-3">
-                                <h6> {post.title} </h6>
+                                <h6> {property.title} </h6>
                             </div>
                         </div>
                     </div>
                     {
-                        (post?.agency?.id == user?.agency_id) &&
+                        (property?.agency?.id == user?.agency_id) &&
                     <div className="ms-auto  p-2">
-                        <PostDropdownMenu handleEditProperty={handleEditProperty} postId={post.id} />
+                        <PostDropdownMenu handleEditProperty={handleEditProperty} postId={property.id} />
                     </div>
                     }
                 </div>
                 {
-                    post && post?.images?.map((img, idx) => (
+                    property && property?.images?.map((img, idx) => (
                         <Col key={img.id} className="">
                             {idx == 0 ?
                                 <ImageListing src={img.image} /> : null
@@ -75,8 +79,8 @@ const PropertyCard = ({ post }:{post:IProperty}) => {
                     ))
                 }
                 <Card.Body className="">
-                    <Card.Title>{post.title}</Card.Title>
-                    <p className="p-2">{post.description}</p>
+                    <Card.Title>{property.title}</Card.Title>
+                    <p className="p-2">{property.description?.substring(0, 100)}</p>
                 </Card.Body>
             </Card>
 

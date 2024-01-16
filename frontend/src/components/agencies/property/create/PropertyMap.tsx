@@ -1,6 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { MapContainer, useMap, TileLayer, ScaleControl, Popup, Marker } from 'react-leaflet';
-import L, { Icon } from 'leaflet';
+// import L, { Icon } from 'leaflet';
 import tileLayer from 'util/tileLayer';
 import { useGetCitiesQuery } from 'features/core/tools';
 import { Button, Form } from 'react-bootstrap';
@@ -12,9 +12,9 @@ import { useFormContext } from 'react-hook-form';
 import { CreatePropertyFromData } from './CreateProperty';
 import { ICity } from 'types/properties';
 
-const markerIcon = new Icon({
-  iconUrl: markIcon,
-})
+// const markerIcon = new Icon({
+//   iconUrl: markIcon,
+// })
 
 const center = [36.75390000, 3.05890000];
 
@@ -60,13 +60,15 @@ const GetCoordinates = ({ newPos }: GetCoordinatesProps) => {
     position.length > 0 ?
       <Marker
         eventHandlers={{
-          dragend: (e) => {
+          dragend: (e:any) => {
             const p = e.target.getLatLng()
             setPosition([p.lat, p.lng])
           }
         }}
-        draggable={true}
-        position={position} on icon={markerIcon}>
+        // draggable={true}
+        position={position}
+        // icon={markerIcon}
+        >
         <Popup>
           <Button onClick={() => setPosition([])}>delete</Button>
         </Popup>
@@ -77,7 +79,7 @@ const GetCoordinates = ({ newPos }: GetCoordinatesProps) => {
 
 
 const PropertyMap = () => {
-  const { register, formState: { errors }, setValue ,getValues } = useFormContext<CreatePropertyFromData>()
+  const { register, formState: { errors }, setValue, getValues } = useFormContext<CreatePropertyFromData>()
 
 
   const { position } = useContext(AgencyPropertyContext)
@@ -88,7 +90,7 @@ const PropertyMap = () => {
 
   const handleCityChange = (event: ChangeEvent<HTMLSelectElement>) => {
     if (!cities) return;
-    const city = cities.filter((c:ICity) => `${c.id}` == event.target.value)
+    const city = cities.filter((c: ICity) => `${c.id}` == event.target.value)
     setNewPos([city[0].lat, city[0].lng])
   }
 
@@ -117,8 +119,12 @@ const PropertyMap = () => {
 
       <div className='border mt-2'>
 
-        <MapContainer className='border' center={position.length > 0 ? position : center}
-          zoom={18} style={{ width: '100%', height: '350px' }} >
+        <MapContainer
+          className='border'
+          center={position.length > 0 ? position : center}
+          zoom={18}
+          style={{ width: '100%', height: '350px' }}
+        >
           <TileLayer {...tileLayer} />
 
           <ScaleControl imperial={false} />
