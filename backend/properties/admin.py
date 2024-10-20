@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Agency, Property , PropertiesImage ,City,Amenity
+from .models import Agency, Property , PropertiesImage ,City,Amenity,Commune
 
 
 class AmenityAdmin(admin.ModelAdmin):
@@ -7,6 +7,9 @@ class AmenityAdmin(admin.ModelAdmin):
 
    
 class CityAdmin(admin.ModelAdmin):
+     list_display = ['id','name','lat', 'lng']
+
+class CommuneAdmin(admin.ModelAdmin):
      list_display = ['id','name','lat', 'lng']
 
    
@@ -27,4 +30,5 @@ admin.site.register(Amenity,AmenityAdmin)
 admin.site.register(Property,PropertyAdmin)
 admin.site.register(PropertiesImage,PropertiesImageAdmin)
 admin.site.register(City,CityAdmin)
+admin.site.register(Commune,CityAdmin)
 

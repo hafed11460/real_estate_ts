@@ -14,6 +14,7 @@ import ContactForm from "./ContactForm";
 import DetailForm from "./DetailForm";
 import { AgencyPropertyContext } from "../AgencyPropertyApp";
 import { BsFileLock, BsGeoAltFill, BsGithub, BsHourglassBottom } from "react-icons/bs";
+import CreateDone from "./CreateDone";
 
 
 type CreatePropertyProps = {
@@ -98,23 +99,27 @@ const iconSize = 25
 const navItems = [
     {
         icon: <BsFileLock size={iconSize} />,
-        label: 'Account'
+        label: 'info'
     },
     {
         icon: <BsGithub size={iconSize} />,
-        label: 'Personal'
+        label: 'Details'
     },
     {
         icon: <BsGeoAltFill size={iconSize} />,
-        label: 'Billing'
+        label: 'Images'
     },
     {
         icon: <BsHourglassBottom size={iconSize} />,
-        label: 'Contact'
+        label: 'Contacts'
     },
     {
         icon: <BsHourglassBottom size={iconSize} />,
-        label: 'Map'
+        label: 'Location'
+    },
+    {
+        icon: <BsHourglassBottom size={iconSize} />,
+        label: 'Success'
     }
 ];
 
@@ -151,7 +156,7 @@ const NavItemPill = ({ key, index, step, icon, label, handleNavs }: NavItemPillP
 
 const CreateProperty = (props: CreatePropertyProps) => {
     const { register,...methods } = useCreatePropertyForm()
-    const lastStep = 5
+    const lastStep = 6
     console.log('rundering CreateProperty')
     const [show, setShow] = useState(false);
     const [addProperty, { isLoading, isSuccess, isError, error }] = useAddPropertyMutation()
@@ -269,6 +274,9 @@ const CreateProperty = (props: CreatePropertyProps) => {
 
                             {step == 5 && (
                                 <PropertyMap />
+                            )}
+                            {step == 6 && (
+                                <CreateDone />
                             )}
 
                         </Card.Body>

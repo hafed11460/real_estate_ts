@@ -8,6 +8,9 @@ import { IProperty } from "types/properties"
 const PropertiesNavbar = () => {
     return (
         <div className=" p-2">
+            <div className="my-5">
+                <h3>Property For Sale</h3>
+            </div>
             <div className="d-flex flex-sm-row flex-column align-items-sm-center align-items-stretch my-2">
                 <div className="d-flex align-items-center flex-shrink-0">
                     <Form.Label htmlFor="sortby" className="text-nowrap me-2"><FaSort /> Sort by:</Form.Label>
@@ -40,7 +43,7 @@ const PropertiesPagination = () => {
                 <li className="page-item d-none d-sm-block"><a className="page-link" href="#">3</a></li>
                 <li className="page-item d-none d-sm-block">...</li>
                 <li className="page-item d-none d-sm-block"><a className="page-link" href="#">8</a></li>
-                <li className="page-item"><a className="page-link" href="#" aria-label="Next"><FaChevronRight/></a></li>
+                <li className="page-item"><a className="page-link" href="#" aria-label="Next"><FaChevronRight /></a></li>
             </ul>
         </nav>
     )
@@ -51,14 +54,14 @@ const PropertiesList = () => {
     const { data } = useGetPropertiesQuery(null)
     if (!data) return <h3>No results</h3>
     return (
-        <div  className="bg-white rounded p-3">
+        <div className="bg-white rounded p-3">
             <PropertiesNavbar />
             <div className="my-3 py-2">
-                <Row md={3} sm={2} xl={3}>
+                <Row md={2} sm={1} xl={3}>
                     {
-                        Array.isArray(data.results) && data.results.map((property:IProperty) => (
+                        Array.isArray(data.results) && data.results.map((property: IProperty) => (
                             <Col key={property.id} className="mb-3">
-                                <PropertyCard    property={property} />
+                                <PropertyCard property={property} />
                             </Col>
                         ))
                     }
@@ -70,4 +73,4 @@ const PropertiesList = () => {
 }
 
 
-export default  PropertiesList
+export default PropertiesList

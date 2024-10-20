@@ -104,6 +104,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
         user.role = role
         user.save()
+        print('user created succefuly')
         return user
 
 

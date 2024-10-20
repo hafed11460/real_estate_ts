@@ -37,12 +37,18 @@ export const mapSlice = createSlice({
     initialState: initialState,
     reducers: {
         setPropertyType: (state, { payload }: PayloadAction<string>) => {
+            console.log(payload)
             const findIdx = state.mapfilter.propertyType.indexOf(payload)
             if (findIdx > -1) {
                 state.mapfilter.propertyType = state.mapfilter.propertyType.filter(p => p !== payload)
             } else {
                 state.mapfilter.propertyType.push(payload)
             }
+        },
+        clearFilter: (state) => {
+            state.query = ''
+            state.mapfilter.city = 0
+            state.mapfilter.propertyType = []
         },
         updatePrice: (state, { payload }: PayloadAction<IPrice>) => {
             state.mapfilter.price = payload
@@ -66,6 +72,7 @@ export const {
     setPropertyID,
     setQueryParams,
     setPropertyType,
+    clearFilter,
 } = mapSlice.actions
 export default mapSlice.reducer
 export const selectCurrentPosition = (state: RootState) => state.map.currentPosition

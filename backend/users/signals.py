@@ -6,10 +6,9 @@ from agencies.models import Agency
 
 @receiver(post_save, sender=User)
 def create_agency(sender, instance, created, **kwargs):
-    if created:
-         
-        # if instance.role == 'CUSTOMER':
-        UserProfile.objects.create(user=instance)
+    if created:         
+        if instance.role == 'CUSTOMER':
+            UserProfile.objects.create(user=instance)
         print('role',instance.role)
         print(type(instance))
         print(instance.first_name)

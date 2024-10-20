@@ -7,6 +7,7 @@ from io import BytesIO
 from django.core.files import File 
 from agencies.models import Agency
 from users.models import User
+from django.utils.translation import gettext as _
 
 class Amenity(models.Model):
     name = models.CharField(max_length=50)
@@ -15,6 +16,7 @@ class Amenity(models.Model):
     
     def __str__(self) -> str:
         return f'{self.name}'
+
 
 class City(models.Model):
     name = models.CharField(max_length=50)
@@ -27,6 +29,12 @@ class City(models.Model):
     def __str__(self) -> str:
         return f'{self.name}'
 
+
+class Commune(models.Model):
+    city = models.ForeignKey(City, verbose_name=_("City"), on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    lat = models.DecimalField(max_digits=10, decimal_places=8)
+    lng = models.DecimalField(max_digits=10, decimal_places=8)
 
 
 def compress_image(picture):

@@ -1,6 +1,6 @@
 import { store } from "app/store"
 import { useGetCitiesQuery } from "features/core/tools"
-import { selectMapFilter, setPropertyType, setQueryParams } from "features/properties/map/mapSlice"
+import { clearFilter, selectMapFilter, setPropertyType, setQueryParams } from "features/properties/map/mapSlice"
 import { propertyAPI, useGetPropertiesFilterMutation, useLazyGetPropertiesQuery } from "features/properties/propertyAPI"
 import { useCallback, useState } from "react"
 import { Button, Form, Offcanvas } from "react-bootstrap"
@@ -19,9 +19,9 @@ type FormValues = {
 
 const MapPropertiesFilter = () => {
     const dispatch = useDispatch()
-    const { data:cities } = useGetCitiesQuery({})
-    const  {propertyType}= useSelector(selectMapFilter)
-    
+    const { data: cities } = useGetCitiesQuery({})
+    const { propertyType } = useSelector(selectMapFilter)
+
     // const [getPropertiesFilter] = useGetPropertiesFilterMutation()
     // const [getPropertiesFilter] = useGetPropertiesFilterMutation()
     const [show, setShow] = useState(false);
@@ -41,7 +41,7 @@ const MapPropertiesFilter = () => {
     const [initialValues, setInitialValues] = useState(initState);
     const {
         register,
-        handleSubmit,        
+        handleSubmit,
         formState: { errors }
     } = useForm<FormValues>({
         mode: "onBlur",
@@ -55,7 +55,7 @@ const MapPropertiesFilter = () => {
 
     const onFilter = (values: FormValues) => {
         let query: string = '?';
-        if (values.city != null && values.city > 0 ) query += 'city=' + values.city
+        if (values.city != null && values.city > 0) query += 'city=' + values.city
 
         if (values.category) query += '&category=' + values.category
 
@@ -75,29 +75,30 @@ const MapPropertiesFilter = () => {
         // setQueryParams(query)
         setShow(false)
     }
-    const isInPropertyType = useCallback((p:string)=>{
+    const isInPropertyType = useCallback((p: string) => {
         return propertyType.includes(p)
-    },[propertyType])
+    }, [propertyType])
 
 
-    
+
 
     const handleChekbox = (val: string) => {
-        dispatch(setPropertyType(val))       
+        dispatch(setPropertyType(val))
     }
 
     return (
-        <>
-            <Button variant="primary" onClick={handleShow}>
-                Filter <FaSlidersH />
-            </Button>
+        <>  
+            
+            {/* <Button size="sm" variant="primary" > */}
+                <FaSlidersH  role="button"  onClick={handleShow}/>
+            {/* </Button> */}
 
             <Offcanvas show={show} onHide={handleClose}>
-                <Form onSubmit={handleSubmit(onFilter)}>
-                    <Offcanvas.Header closeButton className='shadow-sm'>
-                        <Offcanvas.Title>Offcanvas</Offcanvas.Title>
-                    </Offcanvas.Header>
-                    <Offcanvas.Body>
+                <Offcanvas.Header closeButton className='shadow-sm'>
+                    <Offcanvas.Title>Filter</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                    <Form onSubmit={handleSubmit(onFilter)}>
                         <aside className="h-100 bg-white   py-3 rounded p-3">
 
                             <Form.Group>
@@ -106,7 +107,7 @@ const MapPropertiesFilter = () => {
                                     {...register("city")}
                                 >
                                     <option value={0}>-- All --</option>
-                                    {cities && cities.map((city:ICity) => (
+                                    {cities && cities.map((city: ICity) => (
                                         <option key={city.id} value={city.id}>{city.name}</option>
                                     ))}
                                 </Form.Select>
@@ -132,14 +133,14 @@ const MapPropertiesFilter = () => {
                             </Form.Group>
 
                         </aside>
-                    </Offcanvas.Body>
-                    <Offcanvas.Header className='border border-top '>
-                        <div className="w-100 d-flex justify-content-between">
-                            <Button variant='secondary' className='rounded-pill'>Clear</Button>
-                            <Button type="submit" variant='success rounded-pill'>Apply filtrs</Button>
-                        </div>
-                    </Offcanvas.Header>
-                </Form>
+                    </Form>
+                </Offcanvas.Body>
+                <Offcanvas.Header className='border border-top '>
+                    <div className="w-100 d-flex justify-content-between">
+                        <Button variant='secondary' className='rounded-pill' onClick={()=>dispatch(clearFilter())}>Clear</Button>
+                        <Button onClick={handleSubmit(onFilter)} type="submit" variant='success rounded-pill'>Apply filtrs</Button>
+                    </div>
+                </Offcanvas.Header>
             </Offcanvas>
         </>
     );

@@ -130,9 +130,9 @@ class UserProfile(WithTimestamp,models.Model):
     def __str__(self) -> str:
         return f'{self.user.email}'
     
-    def save(self, *args, **kwargs):
-        # image  = compress_image(self.image)
-        # self.image = image
-        image = PIL.Image.open(self.image)
-        image.save(self.image,quality=35,optimize=True)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # image  = compress_image(self.image)
+    #     # self.image = image
+    #     image = PIL.Image.open(self.image)
+    #     image.save(self.image,quality=35,optimize=True)
+    #     super().save(*args, **kwargs)

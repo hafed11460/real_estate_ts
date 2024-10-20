@@ -27,27 +27,26 @@ class RegisterAPIView(GenericAPIView):
     serializer_class = RegisterSerializer
 
     def post(self, request):
-        user = request.data
-        serializer = self.serializer_class(data=user)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        user_data = serializer.data
+        user_instance = serializer.save()
+       
 
-        user = User.objects.get(email=user_data['email'])
-
-        token = RefreshToken.for_user(user).access_token
+        token = RefreshToken.for_user(user_instance).access_token
         current_site = get_current_site(request).domain
         # relativeLink = reverse('email-verify')
         absurl = 'http://'+current_site+"/email-verify/"+"?token="+str(token)
         # # absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
-        email_body = 'Hi '+user.first_name + \
+        email_body = 'Hi '+user_instance.first_name + \
             ' Use the link below to verify your email \n' + absurl
-        data = {'email_body': email_body, 'to_email': user.email,
+        data = {'email_body': email_body, 'to_email': user_instance.email,
                 'email_subject': 'Verify your email'}
+        
+        print(data)
 
-        Util.send_email(data)
+        # Util.send_email(data)
 
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 

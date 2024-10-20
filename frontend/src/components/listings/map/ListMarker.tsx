@@ -65,7 +65,7 @@ const ListMarker = () => {
 
     useEffect(() => {
         trigger(query)
-    }, [])
+    }, [query])
 
     if (isLoading) return null
     if (isSuccess)
